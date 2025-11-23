@@ -30,7 +30,7 @@ services:
       - node-exporter
 
   grafana:
-    build: ./grafana
+    build: ./Grafana
     ports:
       - "3000:3000"     
     depends_on:
