@@ -9,17 +9,26 @@ services:
         - action: sync
           path: ./nginx
           target: /usr/share/nginx/html
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
   nginx-exporter:
-    build: ./nginx_exporter
+    image: nginx/nginx-prometheus-exporter:latest
     command: ["-nginx.scrape-uri=http://nginx:8080/stub_status"]
     ports:
       - "9113:9113"
     depends_on:
       - nginx
+    restart: unless-stopped
   node-exporter:
-    build: ./node_exporter
+    image: prom/node-exporter:latest
     ports:
       - "9100:9100"
+    restart: unless-stopped
 
   prometheus:
     build: ./prometheus
@@ -28,10 +37,13 @@ services:
     depends_on:
       - nginx-exporter 
       - node-exporter
+    restart: unless-stopped
 
   grafana:
-    build: ./Grafana
+    image: grafana/grafana:latest
     ports:
       - "3000:3000"     
     depends_on:
       - prometheus  
+    restart: unless-stopped
+  
