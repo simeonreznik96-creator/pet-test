@@ -16,6 +16,7 @@ services:
       retries: 3
       start_period: 30s
     restart: unless-stopped
+  
   nginx-exporter:
     image: nginx/nginx-prometheus-exporter:latest
     command: ["-nginx.scrape-uri=http://nginx:8080/stub_status"]
@@ -43,7 +44,11 @@ services:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"     
+    volumes:
+      - grafana-storage:/var/lib/grafana
     depends_on:
       - prometheus  
     restart: unless-stopped
   
+volumes:
+  grafana-storage:
