@@ -19,4 +19,5 @@ jobs:
           cd /home/pet-test
           git pull origin main
           docker compose down
-          docker compose up --build -d
+          docker compose build --no-cache
+          docker compose up -d
